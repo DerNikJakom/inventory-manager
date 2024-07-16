@@ -9,9 +9,8 @@ const createColor = (mainColor) => augmentColor({ color: { main: mainColor } });
 const theme = createTheme({
   palette: {
     aliceBlue: createColor("#F2F7F8"),
-    askumaRed: createColor("#5DBA40"),
-    steelBlue: createColor("#5C76B7"),
-    red: createColor("#FF2000"),
+    askumaRed: createColor("#7F0037"),
+    white: createColor("#FFFFFF"),
   },
 });
 
@@ -27,7 +26,7 @@ export default function MenuButtons(props) {
       <Stack direction="column" gap={1}>
         <Button
           id="deviceInfoBtn"
-          color="aliceBlue"
+          color="white"
           onClick={handleClick}
           variant="contained"
         >
@@ -35,7 +34,7 @@ export default function MenuButtons(props) {
         </Button>
         <Button
           id="inventoryBtn"
-          color="aliceBlue"
+          color="white"
           onClick={handleClick}
           variant="contained"
         >
@@ -43,7 +42,7 @@ export default function MenuButtons(props) {
         </Button>
         <Button
           id="logOutBtn"
-          color="red"
+          color="askumaRed"
           onClick={handleClick}
           variant="contained"
         >
