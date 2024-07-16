@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import SignIn from "./SignIn";
+import Home from "./Home";
 import "../styles/App.css";
 
 function App() {
   const [isRegistered, setRegistered] = useState(false);
-  const [isLoggedIn, setLoggedIn] = useState(false);
+  const [isLoggedIn, setLoggedIn] = useState(true);
   const [users, setUser] = useState([]);
 
   const addUser = (user) => {
@@ -20,8 +21,7 @@ function App() {
   if (isLoggedIn) {
     return (
       <>
-        <h1>Intern</h1>
-        <button onClick={logOut}>Log out</button>
+        <Home logOut={logOut} />
       </>
     );
   } else {
