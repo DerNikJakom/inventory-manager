@@ -46,7 +46,7 @@ export default function Home(props) {
       );
 
     default:
-      console.log(`Default case`);
+      console.log(`Case: Default`);
       return (
         <>
           <h1>ASKUMA Manager</h1>
