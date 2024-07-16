@@ -39,6 +39,21 @@ export default function SignIn(props) {
     password: "",
   });
 
+  const validateEmail = (email) => {
+    let regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  };
+
+  const validatePassword = (pw) => {
+    return (
+      /[A-Z]/.test(pw) &&
+      /[a-z]/.test(pw) &&
+      /[0-9]/.test(pw) &&
+      /[^A-Za-z0-9]/.test(pw) &&
+      pw.length > 4
+    );
+  };
+
   const handleChange = (event) => {
     const { name, value } = event.target;
     setInput((prevValue) => {
@@ -66,8 +81,12 @@ export default function SignIn(props) {
         console.log("User bereits registriert", props.users);
         props.login(true);
       }
-    } else {
+    } else if (validateEmail(input.email) && validatePassword(input.password)) {
       props.addUser(input);
+      // props.login(true);
+      console.log("User added");
+    } else {
+      console.log("Email or Password Validation went wrong");
     }
   };
 
