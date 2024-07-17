@@ -51,7 +51,7 @@ export default function InventoryTable(props) {
   };
 
   return (
-    <Card>
+    <Card sx={{ borderRadius: 3, backgroundColor: "#F2F7F8" }}>
       <CardContent>
         <h1>Inventar</h1>
         <Paper sx={{ width: "100%", overflow: "hidden" }}>
@@ -100,7 +100,7 @@ export default function InventoryTable(props) {
           </TableContainer>
         </Paper>
         <br />
-        <BackButton goBack={props.goBack} />
+        <BackButton goBack={props.goBack} value="Zurück" />
       </CardContent>
     </Card>
   );
