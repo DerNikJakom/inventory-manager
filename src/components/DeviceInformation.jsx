@@ -45,14 +45,14 @@ export default function DeviceInformation(props) {
     setExpanded(!expanded);
   };
 
-  const handleSubmit = () => {
-    console.log("submit");
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (isHexCode(input)) setCodeGiven(true);
+    console.log("submit", input);
   };
 
   const handleChange = (event) => {
-    //TODO: get the correct value when changed
     setInput(event.target.value);
-    console.log(input);
   };
 
   const isHexCode = (code) => {
@@ -114,7 +114,7 @@ export default function DeviceInformation(props) {
             title="Gerätecode eingeben"
             subheader="6-stelliger Hex-Code"
           />
-          <CardContent>
+          <CardContent onSubmit={handleSubmit}>
             <Box
               component="form"
               sx={{
@@ -158,7 +158,12 @@ export default function DeviceInformation(props) {
             >
               Zurück
             </Button>
-            <Button type="submit" variant="contained" color="askumaRed">
+            <Button
+              id="submit-code"
+              onClick={handleSubmit}
+              variant="contained"
+              color="askumaRed"
+            >
               Bestätigen
             </Button>
           </CardActions>
