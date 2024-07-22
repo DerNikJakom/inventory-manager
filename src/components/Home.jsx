@@ -13,23 +13,19 @@ export default function Home(props) {
 
   switch (request) {
     case "deviceInfoBtn":
-      console.log("Case: Device");
       return <DeviceInformation goBack={setRequest} />;
 
     case "inventoryBtn":
-      console.log("Case: Inventory");
       return <InventoryTable goBack={setRequest} />;
 
     case "logOutBtn":
-      console.log("Case: Logout");
       return (
-        // TODO: AlertDialog einbauen
+        // ? AlertDialog einbauen?
         // <AlertDialog />
         <LogOut goBack={setRequest} logOut={props.logOut} />
       );
 
     default:
-      console.log(`Case: Default`);
       // TODO: Card Design wie in Figma
       return (
         <Card
