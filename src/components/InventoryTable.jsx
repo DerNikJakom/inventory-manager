@@ -5,11 +5,11 @@ import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
-import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import BackButton from "./BackButton";
+import CardActions from "@mui/material/CardActions";
 
 const columns = [
   { id: "email", label: "E-Mail", minWidth: 170 },
@@ -90,9 +90,17 @@ export default function InventoryTable(props) {
             </Table>
           </TableContainer>
         </Paper>
-        <br />
-        <BackButton goBack={props.goBack} value="Zurück" />
       </CardContent>
+      <CardActions
+        sx={{
+          alignSelf: "stretch",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "flex-start",
+        }}
+      >
+        <BackButton goBack={props.goBack} value="Zurück" />
+      </CardActions>
     </Card>
   );
 }
