@@ -11,20 +11,8 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Button from "@mui/material/Button";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import BackButton from "./BackButton";
-
-// export default function DeviceInformation(props) {
-//   return (
-//     <>
-//       <Card sx={{ borderRadius: 3, backgroundColor: "#F2F7F8" }}>
-//         <CardContent>
-//           <h1>Geräteinformation</h1>
-//           <BackButton goBack={props.goBack} value="Zurück" />
-//         </CardContent>
-//       </Card>
-//     </>
-//   );
-// }
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -50,10 +38,26 @@ const theme = createTheme({
 
 export default function DeviceInformation(props) {
   const [expanded, setExpanded] = useState(false);
-  const [codeGiven, setCodeGiven] = useState(true);
+  const [codeGiven, setCodeGiven] = useState(false);
+  const [input, setInput] = useState("");
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
+  };
+
+  const handleSubmit = () => {
+    console.log("submit");
+  };
+
+  const handleChange = (event) => {
+    //TODO: get the correct value when changed
+    setInput(event.target.value);
+    console.log(input);
+  };
+
+  const isHexCode = (code) => {
+    const regex = /^#[0-9A-F]{6}$/i;
+    return regex.test(code);
   };
 
   if (codeGiven) {
@@ -99,6 +103,65 @@ export default function DeviceInformation(props) {
               <Typography paragraph>Heat 1/2 cup of the br</Typography>
             </CardContent>
           </Collapse>
+        </Card>
+      </ThemeProvider>
+    );
+  } else {
+    return (
+      <ThemeProvider theme={theme}>
+        <Card sx={{ borderRadius: 3, backgroundColor: "#F2F7F8", width: 600 }}>
+          <CardHeader
+            title="Gerätecode eingeben"
+            subheader="6-stelliger Hex-Code"
+          />
+          <CardContent>
+            <Box
+              component="form"
+              sx={{
+                "& .MuiTextField-root": { m: 1, width: "25ch" },
+              }}
+              noValidate
+              autoComplete="off"
+            >
+              <TextField
+                error={!isHexCode(input) && input.length > 1 && true}
+                helperText={
+                  !isHexCode(input) &&
+                  input.length > 1 &&
+                  "Not a valid Hex-Code"
+                }
+                required
+                autoFocus
+                onChange={handleChange}
+                value={input}
+                color="askumaRed"
+                id="hex-input"
+                label="Hex-Code"
+              />
+            </Box>
+          </CardContent>
+          <CardActions
+            sx={{
+              alignSelf: "stretch",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "flex-start",
+            }}
+          >
+            <Button
+              variant="outlined"
+              color="askumaRed"
+              onClick={() => {
+                props.goBack("");
+                setCodeGiven(false);
+              }}
+            >
+              Zurück
+            </Button>
+            <Button type="submit" variant="contained" color="askumaRed">
+              Bestätigen
+            </Button>
+          </CardActions>
         </Card>
       </ThemeProvider>
     );

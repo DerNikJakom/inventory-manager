@@ -16,7 +16,6 @@ const theme = createTheme({
 
 export default function MenuButtons(props) {
   const handleClick = (event) => {
-    console.log(event.target.id, "pressed");
     const button = event.target.id;
     props.userInput(button);
   };
