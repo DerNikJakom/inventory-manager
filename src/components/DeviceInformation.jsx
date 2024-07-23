@@ -7,7 +7,6 @@ import CardActions from "@mui/material/CardActions";
 import Collapse from "@mui/material/Collapse";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import FavoriteIcon from "@mui/icons-material/Favorite";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Button from "@mui/material/Button";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -39,6 +38,7 @@ const theme = createTheme({
 export default function DeviceInformation(props) {
   const [expanded, setExpanded] = useState(false);
   const [codeGiven, setCodeGiven] = useState(false);
+  const [isAssigned, setAssigned] = useState(false);
   const [input, setInput] = useState("");
 
   const handleExpandClick = () => {
@@ -49,6 +49,11 @@ export default function DeviceInformation(props) {
     event.preventDefault();
     if (isHexCode(input)) setCodeGiven(true);
     console.log("submit", input);
+  };
+
+  const handleClick = (event) => {
+    const clickedBtn = event.target.id;
+    clickedBtn == "assignBtn" ? setAssigned(true) : setAssigned(false);
   };
 
   const handleChange = (event) => {
@@ -74,20 +79,51 @@ export default function DeviceInformation(props) {
         </Typography> */}
           </CardContent>
           <CardActions disableSpacing>
-            <Button
-              variant="contained"
-              color="askumaRed"
-              onClick={() => {
-                props.goBack("");
-                setCodeGiven(false);
-              }}
-            >
-              Zurück
-            </Button>
-            {/* <BackButton value="Zurück" goBack={props.goBack} /> */}
-            <IconButton aria-label="add to favorites">
-              <FavoriteIcon />
-            </IconButton>
+            {isAssigned ? (
+              <>
+                <Button
+                  variant="contained"
+                  color="askumaRed"
+                  onClick={() => {
+                    props.goBack("");
+                    setCodeGiven(false);
+                  }}
+                >
+                  Zurück
+                </Button>
+                <div style={{ width: "0.5em" }}></div>
+                <Button
+                  id="removeBtn"
+                  onClick={handleClick}
+                  color="askumaRed"
+                  variant="outlined"
+                >
+                  Entfernen
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button
+                  variant="outlined"
+                  color="askumaRed"
+                  onClick={() => {
+                    props.goBack("");
+                    setCodeGiven(false);
+                  }}
+                >
+                  Zurück
+                </Button>
+                <div style={{ width: "0.5em" }}></div>
+                <Button
+                  id="assignBtn"
+                  onClick={handleClick}
+                  variant="contained"
+                  color="askumaRed"
+                >
+                  Buchen
+                </Button>
+              </>
+            )}
             <ExpandMore
               expand={expanded}
               onClick={handleExpandClick}
