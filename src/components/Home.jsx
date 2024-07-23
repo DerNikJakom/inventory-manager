@@ -5,8 +5,7 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
 import DeviceInformation from "./DeviceInformation";
-import LogOut from "./LogOut";
-import AlertDialog from "./AlertDialog";
+import Confirm from "./Confirm";
 
 export default function Home(props) {
   const [request, setRequest] = useState("");
@@ -20,13 +19,10 @@ export default function Home(props) {
 
     case "logOutBtn":
       return (
-        // ? AlertDialog einbauen?
-        // <AlertDialog />
-        <LogOut goBack={setRequest} logOut={props.logOut} />
+        <Confirm goBack={setRequest} logOut={props.logOut} type="logOut" />
       );
 
     default:
-      // TODO: Card Design wie in Figma
       return (
         <Card
           sx={{ borderRadius: 3, backgroundColor: "#F2F7F8", minWidth: 600 }}
