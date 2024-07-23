@@ -16,12 +16,12 @@ const theme = createTheme({
   },
 });
 
-export default function LogOut(props) {
+export default function Confirm(props) {
   return (
     <ThemeProvider theme={theme}>
       <Card sx={{ borderRadius: 3, backgroundColor: "#F2F7F8", minWidth: 600 }}>
         <CardContent>
-          <h2 style={{ marginTop: 0 }}>Möchten Sie sich wirklich ausloggen?</h2>
+          <h2 style={{ marginTop: 0 }}>Sind Sie sich sicher?</h2>
         </CardContent>
         <CardActions
           sx={{
@@ -35,7 +35,7 @@ export default function LogOut(props) {
             Zurück
           </Button>
           <Button variant="contained" onClick={props.logOut} color="askumaRed">
-            Bestätigen
+            {props.type == "logOut" ? "Ausloggen" : "Entfernen"}
           </Button>
         </CardActions>
       </Card>
