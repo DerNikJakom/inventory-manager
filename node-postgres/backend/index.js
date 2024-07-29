@@ -16,8 +16,8 @@ app.use(function (req, res, next) {
 });
 
 app.get("/", (req, res) => {
-  merchant_model
-    .getMerchants()
+  deviceDB
+    .getMitarbeiter()
     .then((response) => {
       res.status(200).send(response);
     })
@@ -26,9 +26,9 @@ app.get("/", (req, res) => {
     });
 });
 
-app.post("/merchants", (req, res) => {
-  merchant_model
-    .createMerchant(req.body)
+app.post("/mitarbeiter", (req, res) => {
+  deviceDB
+    .createMitarbeiter(req.body)
     .then((response) => {
       res.status(200).send(response);
     })
@@ -37,9 +37,9 @@ app.post("/merchants", (req, res) => {
     });
 });
 
-app.delete("/merchants/:id", (req, res) => {
-  merchant_model
-    .deleteMerchant(req.params.id)
+app.delete("/mitarbeiter/:id", (req, res) => {
+  deviceDB
+    .deleteMitarbeiter(req.params.id)
     .then((response) => {
       res.status(200).send(response);
     })
@@ -47,11 +47,11 @@ app.delete("/merchants/:id", (req, res) => {
       res.status(500).send(error);
     });
 });
-app.put("/merchants/:id", (req, res) => {
+app.put("/mitarbeiter/:id", (req, res) => {
   const id = req.params.id;
   const body = req.body;
-  merchant_model
-    .updateMerchant(id, body)
+  deviceDB
+    .updateMitarbeiter(id, body)
     .then((response) => {
       res.status(200).send(response);
     })
