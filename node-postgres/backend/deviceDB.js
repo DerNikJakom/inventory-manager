@@ -28,6 +28,27 @@ const getMitarbeiter = async () => {
     throw new Error("Internal server error");
   }
 };
+
+const getGeraete = async () => {
+  try {
+    return await new Promise(function (resolve, reject) {
+      pool.query("SELECT * FROM geraete", (error, results) => {
+        if (error) {
+          reject(error);
+        }
+        if (results && results.rows) {
+          resolve(results.rows);
+        } else {
+          reject(new Error("No results found"));
+        }
+      });
+    });
+  } catch (error_1) {
+    console.error(error_1);
+    throw new Error("Internal server error");
+  }
+};
+
 //create a new mitarbeiter record in the database
 const createMitarbeiter = (body) => {
   return new Promise(function (resolve, reject) {
@@ -67,8 +88,24 @@ const deleteMitarbeiter = (id) => {
     );
   });
 };
+
+const deleteGeraet = (code) => {
+  return new Promise(function (resolve, reject) {
+    pool.query(
+      "DELETE FROM geraete WHERE code = $1",
+      [code],
+      (error, results) => {
+        if (error) {
+          reject(error);
+        }
+        resolve(`Mitarbeiter deleted with code: ${code}`);
+      }
+    );
+  });
+};
+
 //update a mitarbeiter record
-const updateMitarbetier = (id, body) => {
+const updateMitarbeiter = (id, body) => {
   return new Promise(function (resolve, reject) {
     const { name, email } = body;
     pool.query(
@@ -88,9 +125,32 @@ const updateMitarbetier = (id, body) => {
   });
 };
 
-module.exports = {
+const updateGeraet = (id, body) => {
+  return new Promise(function (resolve, reject) {
+    const { name, email } = body;
+    pool.query(
+      "UPDATE geraete SET name = $1, email = $2 WHERE id = $3 RETURNING *",
+      [name, email, id],
+      (error, results) => {
+        if (error) {
+          reject(error);
+        }
+        if (results && results.rows) {
+          resolve(`Gerät updated: ${JSON.stringify(results.rows[0])}`);
+        } else {
+          reject(new Error("No results found"));
+        }
+      }
+    );
+  });
+};
+
+export default {
   getMitarbeiter,
+  getGeraete,
   createMitarbeiter,
   deleteMitarbeiter,
-  updateMitarbetier,
+  deleteGeraet,
+  updateMitarbeiter,
+  updateGeraet,
 };

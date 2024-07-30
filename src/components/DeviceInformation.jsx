@@ -52,9 +52,15 @@ export default function DeviceInformation(props) {
   };
 
   const handleClick = (event) => {
+    getResponse();
     const clickedBtn = event.target.id;
     clickedBtn == "assignBtn" ? setAssigned(true) : setAssigned(false);
   };
+
+  async function getResponse() {
+    const response = await fetch("http://localhost:3001/geraete");
+    console.log(response);
+  }
 
   const handleChange = (event) => {
     setInput(event.target.value);
