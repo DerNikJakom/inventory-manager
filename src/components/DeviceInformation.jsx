@@ -50,17 +50,23 @@ export default function DeviceInformation(props) {
     if (isHexCode(input)) setCodeGiven(true);
     console.log("submit", input);
   };
-
+  // TODO ----------------------
   const handleClick = (event) => {
-    getResponse();
+    getResponse("/geraete/FFFFFF");
     const clickedBtn = event.target.id;
     clickedBtn == "assignBtn" ? setAssigned(true) : setAssigned(false);
   };
 
-  async function getResponse() {
-    const response = await fetch("http://localhost:3001/geraete");
-    console.log(response);
+  async function getResponse(url) {
+    await fetch(`http://localhost:3001${url}`)
+      .then((response) => {
+        return response.json();
+      })
+      .then((json) => {
+        console.log(json[0]);
+      });
   }
+  // TODO -----------------------
 
   const handleChange = (event) => {
     setInput(event.target.value);

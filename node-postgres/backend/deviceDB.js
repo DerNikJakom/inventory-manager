@@ -48,6 +48,25 @@ const getGeraete = async () => {
     throw new Error("Internal server error");
   }
 };
+// TODO ----------------------------------
+const getSpecificGeraet = (code) => {
+  return new Promise(function (resolve, reject) {
+    pool.query(
+      "SELECT * FROM geraete WHERE code = $1",
+      [code],
+      (error, results) => {
+        if (error) {
+          reject(error);
+        }
+        if (results && results.rows) {
+          resolve(results.rows);
+        } else {
+          reject(new Error("No results found"));
+        }
+      }
+    );
+  });
+};
 
 //create a new mitarbeiter record in the database
 const createMitarbeiter = (body) => {
@@ -148,6 +167,7 @@ const updateGeraet = (id, body) => {
 export default {
   getMitarbeiter,
   getGeraete,
+  getSpecificGeraet,
   createMitarbeiter,
   deleteMitarbeiter,
   deleteGeraet,

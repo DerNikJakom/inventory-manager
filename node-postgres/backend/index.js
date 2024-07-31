@@ -37,6 +37,17 @@ app.get("/geraete", (req, res) => {
     });
 });
 
+app.get("/geraete/:code", (req, res) => {
+  deviceDB
+    .getSpecificGeraet("#" + req.params.code)
+    .then((response) => {
+      res.status(200).send(response);
+    })
+    .catch((error) => {
+      res.status(500).send(error);
+    });
+});
+
 app.post("/mitarbeiter", (req, res) => {
   deviceDB
     .createMitarbeiter(req.body)
