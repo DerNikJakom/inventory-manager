@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { styled } from "@mui/material/styles";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
@@ -40,40 +40,59 @@ export default function DeviceInformation(props) {
   const [codeGiven, setCodeGiven] = useState(false);
   const [isAssigned, setAssigned] = useState(false);
   const [input, setInput] = useState("");
+  const [device, setDevice] = useState({
+    id: 0,
+    mitarbeiter_id: 0,
+    name: "",
+    hersteller: "",
+    modell: "",
+    produktnummer: "",
+    seriennummer: "",
+    code: "",
+  });
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    if (isHexCode(input)) setCodeGiven(true);
-    console.log("submit", input);
-  };
-  // TODO ----------------------
   const handleClick = (event) => {
-    getResponse("/geraete/FFFFFF");
     const clickedBtn = event.target.id;
     clickedBtn == "assignBtn" ? setAssigned(true) : setAssigned(false);
   };
 
-  async function getResponse(url) {
-    await fetch(`http://localhost:3001${url}`)
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    if (isHexCode(input)) {
+      const result = await getResponse(`/geraete/${input.toUpperCase()}`); //TODO: siehe 'getResponse'
+      if (result.length == 1) {
+        //TODO Change
+        setCodeGiven(true);
+      }
+    } else {
+      console.error("Not a valid Hex-Code");
+    }
+  };
+
+  const getResponse = async (path) => {
+    let result; // TODO: Redundant durch setState 'device'
+    await fetch(process.env.API_URL + path)
       .then((response) => {
         return response.json();
       })
       .then((json) => {
-        console.log(json[0]);
+        result = json; // TODO: siehe oben
+        setDevice(json[0]);
       });
-  }
-  // TODO -----------------------
+
+    return result; // TODO: siehe oben
+  };
 
   const handleChange = (event) => {
     setInput(event.target.value);
   };
 
   const isHexCode = (code) => {
-    const regex = /^#[0-9A-F]{6}$/i;
+    const regex = /^[0-9A-F]{6}$/i;
     return regex.test(code);
   };
 
@@ -82,8 +101,8 @@ export default function DeviceInformation(props) {
       <ThemeProvider theme={theme}>
         <Card sx={{ borderRadius: 3, backgroundColor: "#F2F7F8", width: 600 }}>
           <CardHeader
-            title="Lenovo Thinkpad E15"
-            subheader="genutzt von: Jan Komnik"
+            title={`${device.hersteller} ${device.modell}`}
+            subheader="genutzt von: Jan Komnik" //TODO: Dynamik
           />
           <CardContent>
             {/* <Typography variant="body2" color="text.secondary">
@@ -147,8 +166,13 @@ export default function DeviceInformation(props) {
           </CardActions>
           <Collapse in={expanded} timeout="auto" unmountOnExit>
             <CardContent>
-              <Typography paragraph>Method:</Typography>
-              <Typography paragraph>Heat 1/2 cup of the br</Typography>
+              <Typography paragraph>
+                Gerätebezeichnung: {device.name}
+                <br />
+                Produktnummer: {device.produktnummer}
+                <br />
+                Seriennummer: {device.seriennummer}
+              </Typography>
             </CardContent>
           </Collapse>
         </Card>
