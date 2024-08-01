@@ -163,7 +163,7 @@ export default function DeviceInformation(props) {
           </CardActions>
           <Collapse in={expanded} timeout="auto" unmountOnExit>
             <CardContent>
-              <Typography sx={{ textAlign: "left" }} paragraph>
+              <Typography sx={{ textAlign: "left" }} variant="body3">
                 <ul>
                   <li>Gerätebezeichnung: {device.name}</li>
                   <li>Produktnummer: {device.produktnummer}</li>
