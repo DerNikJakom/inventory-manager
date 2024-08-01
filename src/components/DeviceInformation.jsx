@@ -41,8 +41,8 @@ export default function DeviceInformation(props) {
   const [isAssigned, setAssigned] = useState(false);
   const [input, setInput] = useState("");
   const [device, setDevice] = useState({
-    id: 0,
-    mitarbeiter_id: 0,
+    vorname: "",
+    nachname: "",
     name: "",
     hersteller: "",
     modell: "",
@@ -99,16 +99,13 @@ export default function DeviceInformation(props) {
   if (codeGiven) {
     return (
       <ThemeProvider theme={theme}>
-        <Card sx={{ borderRadius: 3, backgroundColor: "#F2F7F8", width: 600 }}>
+        <Card
+          sx={{ borderRadius: 3, backgroundColor: "#F2F7F8", minWidth: 400 }}
+        >
           <CardHeader
             title={`${device.hersteller} ${device.modell}`}
-            subheader="genutzt von: Jan Komnik" //TODO: Dynamik
+            subheader={`genutzt von: ${device.vorname} ${device.nachname}`}
           />
-          <CardContent>
-            {/* <Typography variant="body2" color="text.secondary">
-          This impressive paella is a perfect party dish
-        </Typography> */}
-          </CardContent>
           <CardActions disableSpacing>
             {isAssigned ? (
               <>
@@ -166,12 +163,12 @@ export default function DeviceInformation(props) {
           </CardActions>
           <Collapse in={expanded} timeout="auto" unmountOnExit>
             <CardContent>
-              <Typography paragraph>
-                Gerätebezeichnung: {device.name}
-                <br />
-                Produktnummer: {device.produktnummer}
-                <br />
-                Seriennummer: {device.seriennummer}
+              <Typography sx={{ textAlign: "left" }} paragraph>
+                <ul>
+                  <li>Gerätebezeichnung: {device.name}</li>
+                  <li>Produktnummer: {device.produktnummer}</li>
+                  <li>Seriennummer: {device.seriennummer}</li>
+                </ul>
               </Typography>
             </CardContent>
           </Collapse>

@@ -29,7 +29,7 @@ const getMitarbeiter = async () => {
   }
 };
 
-const getGeraete = async () => {
+const getAllGeraete = async () => {
   try {
     return await new Promise(function (resolve, reject) {
       pool.query("SELECT * FROM geraete", (error, results) => {
@@ -48,11 +48,11 @@ const getGeraete = async () => {
     throw new Error("Internal server error");
   }
 };
-// TODO ----------------------------------
+
 const getSpecificGeraet = (code) => {
   return new Promise(function (resolve, reject) {
     pool.query(
-      "SELECT * FROM geraete WHERE code = $1",
+      "SELECT mitarbeiter.vorname, mitarbeiter.nachname, geraete.name, geraete.hersteller, geraete.modell, geraete.seriennummer, geraete.produktnummer, geraete.code FROM geraete INNER JOIN mitarbeiter ON geraete.mitarbeiter_id = mitarbeiter.id WHERE code = $1",
       [code],
       (error, results) => {
         if (error) {
@@ -165,12 +165,6 @@ const updateGeraet = (id, body) => {
 };
 
 export default {
-  getMitarbeiter,
-  getGeraete,
+  getAllGeraete,
   getSpecificGeraet,
-  createMitarbeiter,
-  deleteMitarbeiter,
-  deleteGeraet,
-  updateMitarbeiter,
-  updateGeraet,
 };
