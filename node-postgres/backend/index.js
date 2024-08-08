@@ -5,6 +5,7 @@ const app = express();
 const port = 3001;
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(function (req, res, next) {
   res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
   res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
@@ -28,7 +29,18 @@ app.get("/", (req, res) => {
 
 app.get("/geraete", (req, res) => {
   deviceDB
-    .getGeraete()
+    .getAllGeraete()
+    .then((response) => {
+      res.status(200).send(response);
+    })
+    .catch((error) => {
+      res.status(500).send(error);
+    });
+});
+
+app.get("/geraete/user/:id", (req, res) => {
+  deviceDB
+    .getGeraeteOfUser(req.params.id)
     .then((response) => {
       res.status(200).send(response);
     })
@@ -39,7 +51,20 @@ app.get("/geraete", (req, res) => {
 
 app.get("/geraete/:code", (req, res) => {
   deviceDB
-    .getSpecificGeraet("#" + req.params.code)
+    .getSpecificGeraet(req.params.code)
+    .then((response) => {
+      res.status(200).send(response);
+    })
+    .catch((error) => {
+      res.status(500).send(error);
+    });
+});
+
+app.put("/geraete/:code/:id", (req, res) => {
+  const hexcode = req.params.code;
+  const mitarbeiterID = req.params.id;
+  deviceDB
+    .updateGeraet(hexcode, mitarbeiterID)
     .then((response) => {
       res.status(200).send(response);
     })
@@ -83,5 +108,5 @@ app.put("/mitarbeiter/:id", (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`App running on http://localhost:${port}.`);
+  console.log(`Backend running on http://localhost:${port}.`);
 });
