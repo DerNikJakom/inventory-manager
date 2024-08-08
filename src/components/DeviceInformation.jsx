@@ -41,6 +41,7 @@ export default function DeviceInformation(props) {
   const [isAssigned, setAssigned] = useState(false);
   const [input, setInput] = useState("");
   const [device, setDevice] = useState({
+    mitarbeiterID: 0,
     vorname: "",
     nachname: "",
     name: "",
@@ -55,17 +56,36 @@ export default function DeviceInformation(props) {
     setExpanded(!expanded);
   };
 
-  const handleClick = (event) => {
+  const handleClick = async (event) => {
     const clickedBtn = event.target.id;
-    clickedBtn == "assignBtn" ? setAssigned(true) : setAssigned(false);
+    await changeAssignedUser(clickedBtn);
+    clickedBtn === "assignBtn" ? setAssigned(true) : setAssigned(false);
+  };
+
+  //TODO: change path to have the current user id
+  const changeAssignedUser = async (button) => {
+    if (button === "assignBtn") {
+      await fetch(process.env.API_URL + `/geraete/${device.code}/1`, {
+        method: "PUT",
+      })
+        .then((response) => response.text())
+        .then((data) => console.log(data));
+      await getResponse(`/geraete/${device.code}`);
+    } else {
+      await fetch(process.env.API_URL + `/geraete/${device.code}/0`, {
+        method: "PUT",
+      })
+        .then((response) => response.text())
+        .then((data) => console.log(data));
+      await getResponse(`/geraete/${device.code}`);
+    }
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (isHexCode(input)) {
       const result = await getResponse(`/geraete/${input.toUpperCase()}`); //TODO: siehe 'getResponse'
-      if (result.length == 1) {
-        //TODO Change
+      if (result.length === 1) {
         setCodeGiven(true);
       }
     } else {
@@ -76,14 +96,16 @@ export default function DeviceInformation(props) {
   const getResponse = async (path) => {
     let result; // TODO: Redundant durch setState 'device'
     await fetch(process.env.API_URL + path)
-      .then((response) => {
-        return response.json();
-      })
+      .then((response) => response.json())
       .then((json) => {
         result = json; // TODO: siehe oben
         setDevice(json[0]);
+        if (json[0].vorname == null) {
+          setAssigned(false);
+        } else {
+          setAssigned(true);
+        }
       });
-
     return result; // TODO: siehe oben
   };
 
@@ -104,7 +126,11 @@ export default function DeviceInformation(props) {
         >
           <CardHeader
             title={`${device.hersteller} ${device.modell}`}
-            subheader={`genutzt von: ${device.vorname} ${device.nachname}`}
+            subheader={
+              isAssigned
+                ? `genutzt von: ${device.vorname} ${device.nachname}`
+                : "nicht in Nutzung"
+            }
           />
           <CardActions disableSpacing>
             {isAssigned ? (

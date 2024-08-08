@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -10,19 +10,37 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import BackButton from "./BackButton";
 import CardActions from "@mui/material/CardActions";
+import { red } from "@mui/material/colors";
 
 const columns = [
-  { id: "email", label: "E-Mail", minWidth: 170 },
-  { id: "deviceBrand", label: "Marke", minWidth: 100 },
+  { id: "name", label: "Name", minWidth: 170 },
   {
-    id: "deviceModel",
+    id: "hersteller",
+    label: "Hersteller",
+    minWidth: 170,
+    align: "right",
+  },
+  {
+    id: "modell",
     label: "Modell",
     minWidth: 170,
     align: "right",
   },
   {
-    id: "deviceSerial",
+    id: "seriennummer",
     label: "Seriennummer",
+    minWidth: 170,
+    align: "right",
+  },
+  {
+    id: "produktnummer",
+    label: "Produktnummer",
+    minWidth: 170,
+    align: "right",
+  },
+  {
+    id: "code",
+    label: "Hex-Code",
     minWidth: 170,
     align: "right",
   },
@@ -32,12 +50,24 @@ function createData(email, deviceBrand, deviceModel, deviceSerial) {
   return { email, deviceBrand, deviceModel, deviceSerial };
 }
 
-const rows = [
-  createData("user1@example.com", "Lenovo", "ThinkPad", 3287263),
-  createData("user2@example.com", "Lenovo", "Thinkpad", 1257896),
-];
-
 export default function InventoryTable(props) {
+  const [rows, setRows] = useState([]);
+  const [counter, setCounter] = useState(0);
+
+  const getUserDevices = async (userID) => {
+    await fetch(process.env.API_URL + `/geraete/user/${userID}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setRows(data);
+        console.log(data);
+      });
+  };
+  // ! unnbedingt anders lösen, funktion woanders aufrufen
+  if (counter === 0) {
+    getUserDevices(1); // ! userID hier noch nicht dynamisch
+    setCounter(1);
+  }
+
   return (
     <Card sx={{ borderRadius: 3, backgroundColor: "#F2F7F8" }}>
       <CardContent>
@@ -51,7 +81,12 @@ export default function InventoryTable(props) {
                     <TableCell
                       key={column.id}
                       align={column.align}
-                      style={{ minWidth: column.minWidth }}
+                      style={{
+                        minWidth: column.minWidth,
+                        color: "#FFFFFF",
+                        backgroundColor: "#7F0037",
+                        fontWeight: "bold",
+                      }}
                     >
                       {column.label}
                     </TableCell>
@@ -66,7 +101,7 @@ export default function InventoryTable(props) {
                       role="checkbox"
                       tabIndex={-1}
                       // TODO: key in 'TableRow' ersetzen durch primary ID aus Datenbank
-                      key={row.email}
+                      key={row.code}
                     >
                       {columns.map((column) => {
                         const value = row[column.id];

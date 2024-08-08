@@ -36,7 +36,7 @@ const defaultTheme = createTheme({
 export default function SignIn(props) {
   const [input, setInput] = useState({
     email: "",
-    password: "",
+    passwort: "",
   });
 
   const validateEmail = (email) => {
@@ -64,25 +64,45 @@ export default function SignIn(props) {
     });
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // const data = new FormData(event.currentTarget);
+    const result = await fetch(process.env.API_URL)
+      .then((response) => response.json())
+      .then((data) => {
+        return data;
+      });
 
-    // setInput({
-    //   email: data.get("email"),
-    //   password: data.get("password"),
-    // });
+    const userIndex = result.findIndex((i) => i.email === input.email);
+    const user = result[userIndex];
 
-    const userIndex = props.users.findIndex((i) => i.email === input.email);
-    const user = props.users[userIndex];
+    // TODO --------------------------------------
     if (userIndex >= 0) {
-      if (user.email === input.email && user.password === input.password) {
-        console.log("User bereits registriert", props.users);
-        props.login(true);
+      if (user.email === input.email) {
+        if (user.passwort === input.passwort) {
+          console.log("richtige Anmeldedaten");
+          // props.login(true);
+        } else {
+          console.log("falsches Passwort");
+        }
       }
-    } else if (validateEmail(input.email) && validatePassword(input.password)) {
-      props.addUser(input);
+    } else if (validateEmail(input.email) && validatePassword(input.passwort)) {
+      // prettier-ignore
+      await fetch(process.env.API_URL + "/mitarbeiter", {
+        method: "POST",
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          vorname: "",
+          nachname: "",
+          email: input.email,
+          passwort: input.passwort,
+        }),
+      })
+        .then((response) => response.text())
+        .then((data) => console.log(data));
       // props.login(true);
       console.log("User added");
     } else {
@@ -131,10 +151,10 @@ export default function SignIn(props) {
               onChange={handleChange}
               required
               fullWidth
-              name="password"
+              name="passwort"
               label="Passwort"
               type="password"
-              id="password"
+              id="passwort"
               autoComplete="current-password"
             />
 
