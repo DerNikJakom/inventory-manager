@@ -5,8 +5,8 @@ import "../styles/App.css";
 
 function App() {
   const [isRegistered, setRegistered] = useState(false);
-  const [isLoggedIn, setLoggedIn] = useState(true);
-  const [users, setUser] = useState([]);
+  const [isLoggedIn, setLoggedIn] = useState(false); // ! Status
+  const [currentUserID, setCurrentUserID] = useState(0);
 
   const addUser = (user) => {
     setUser((prevValue) => {
@@ -21,7 +21,7 @@ function App() {
   if (isLoggedIn) {
     return (
       <>
-        <Home logOut={logOut} />
+        <Home logOut={logOut} userID={currentUserID} />
       </>
     );
   } else {
@@ -30,7 +30,6 @@ function App() {
         <SignIn
           login={setLoggedIn}
           register={setRegistered}
-          users={users}
           addUser={addUser}
         />
       </>
