@@ -65,9 +65,12 @@ export default function DeviceInformation(props) {
   //TODO: change path to have the current user id
   const changeAssignedUser = async (button) => {
     if (button === "assignBtn") {
-      await fetch(process.env.API_URL + `/geraete/${device.code}/1`, {
-        method: "PUT",
-      })
+      await fetch(
+        process.env.API_URL + `/geraete/${device.code}/${props.userID}`,
+        {
+          method: "PUT",
+        }
+      )
         .then((response) => response.text())
         .then((data) => console.log(data));
       await getResponse(`/geraete/${device.code}`);

@@ -10,7 +10,6 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import BackButton from "./BackButton";
 import CardActions from "@mui/material/CardActions";
-import { red } from "@mui/material/colors";
 
 const columns = [
   { id: "name", label: "Name", minWidth: 170 },
@@ -52,19 +51,19 @@ function createData(email, deviceBrand, deviceModel, deviceSerial) {
 
 export default function InventoryTable(props) {
   const [rows, setRows] = useState([]);
-  const [counter, setCounter] = useState(0);
+  const [counter, setCounter] = useState(0); //! counter entfernen, funktion 'getUserDevices' anderweitig bei Load aufrufen
 
   const getUserDevices = async (userID) => {
     await fetch(process.env.API_URL + `/geraete/user/${userID}`)
       .then((response) => response.json())
       .then((data) => {
         setRows(data);
-        console.log(data);
+        // console.log(data);
       });
   };
   // ! unnbedingt anders lösen, funktion woanders aufrufen
   if (counter === 0) {
-    getUserDevices(1); // ! userID hier noch nicht dynamisch
+    getUserDevices(props.userID);
     setCounter(1);
   }
 

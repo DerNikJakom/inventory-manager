@@ -12,10 +12,10 @@ export default function Home(props) {
 
   switch (request) {
     case "deviceInfoBtn":
-      return <DeviceInformation goBack={setRequest} />;
+      return <DeviceInformation goBack={setRequest} userID={props.userID} />;
 
     case "inventoryBtn":
-      return <InventoryTable goBack={setRequest} />;
+      return <InventoryTable goBack={setRequest} userID={props.userID} />;
 
     case "logOutBtn":
       return (

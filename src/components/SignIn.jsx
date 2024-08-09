@@ -80,13 +80,16 @@ export default function SignIn(props) {
     if (userIndex >= 0) {
       if (user.email === input.email) {
         if (user.passwort === input.passwort) {
-          console.log("richtige Anmeldedaten");
-          // props.login(true);
+          console.log("Anmeldedaten korrekt");
+          props.userID(user.id);
+          // ! Müsste über einen Sessiontoken laufen, sonst Sicherheitslücke?
+          props.login(true);
         } else {
-          console.log("falsches Passwort");
+          console.log("Anmeldedaten fehlerhaft (Passwort)");
         }
       }
     } else if (validateEmail(input.email) && validatePassword(input.passwort)) {
+      console.log("User existiert nicht");
       // prettier-ignore
       await fetch(process.env.API_URL + "/mitarbeiter", {
         method: "POST",
