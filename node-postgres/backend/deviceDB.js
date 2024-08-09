@@ -1,5 +1,7 @@
 import pg from "pg";
+import bcrypt from "bcrypt";
 
+// TODO Replace with env variables
 const pool = new pg.Pool({
   user: "postgres",
   host: "localhost",
@@ -7,6 +9,10 @@ const pool = new pg.Pool({
   password: "postgres",
   port: 5432,
 });
+
+const saltRounds = 10;
+
+//console.log(process.env);
 
 //get all mitarbeiter
 const getMitarbeiter = async () => {
@@ -87,14 +93,24 @@ const getGeraeteOfUser = (id) => {
   });
 };
 
+// TODO Hashind and salting
 const createMitarbeiter = (body) => {
   return new Promise(function (resolve, reject) {
     const { vorname, nachname, email, passwort } = body;
     console.log(body);
-    if (Object.keys(body).length > 0) {
+
+    // TODO move this into the query to store the salt and hashed password
+    bcrypt.genSalt(saltRounds, (err, salt) => {
+      console.log(salt);
+      bcrypt.hash(passwort, salt, (err, hash) => {
+        console.log(hash);
+      });
+    });
+
+    if (Object.keys(body).length > 110) {
       pool.query(
-        "INSERT INTO mitarbeiter (vorname, nachname, email, passwort) VALUES ($1, $2, $3, $4) RETURNING *",
-        [vorname, nachname, email, passwort],
+        "INSERT INTO mitarbeiter (vorname, nachname, email, passwort, salt) VALUES ($1, $2, $3, $4, $5) RETURNING *",
+        [vorname, nachname, email, passwort, salt],
         (error, results) => {
           if (error) {
             reject(error);
