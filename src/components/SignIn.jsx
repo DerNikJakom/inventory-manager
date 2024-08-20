@@ -4,7 +4,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 // import FormControlLabel from "@mui/material/FormControlLabel";
 // import Checkbox from "@mui/material/Checkbox";
-// import Grid from "@mui/material/Grid";
+import Grid from "@mui/material/Grid";
 import Link from "@mui/material/Link";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -38,6 +38,11 @@ export default function SignIn(props) {
     email: "",
     passwort: "",
   });
+  const [isValid, setValid] = useState(true);
+  const [rdyToRegister, setRdyToRegister] = useState(false);
+  const [helperTextEmail, setHelperTextEmail] = useState("");
+  const [helperTextPwd, setHelperTextPwd] = useState("");
+  const [btnTxt, setBtnTxt] = useState("Weiter");
 
   const validateEmail = (email) => {
     let regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -54,8 +59,24 @@ export default function SignIn(props) {
     );
   };
 
+  const handleClick = () => {
+    setHelperTextEmail("");
+    setValid(true);
+    setBtnTxt("Weiter");
+    setRdyToRegister(false);
+  };
+
   const handleChange = (event) => {
     const { name, value } = event.target;
+    if (name === "email" && !validateEmail(value)) {
+      props.setRegistered(false);
+      setValid(true);
+      setHelperTextEmail("");
+      setBtnTxt("Weiter");
+    } else if (name === "passwort" && value === "") {
+      setHelperTextPwd("");
+      setValid(true);
+    }
     setInput((prevValue) => {
       return {
         ...prevValue,
@@ -78,38 +99,62 @@ export default function SignIn(props) {
 
     // TODO --------------------------------------
     if (userIndex >= 0) {
-      if (user.email === input.email) {
-        if (user.passwort === input.passwort) {
-          console.log("Anmeldedaten korrekt");
-          props.userID(user.id);
-          // ! Müsste über einen Sessiontoken laufen, sonst Sicherheitslücke?
-          props.login(true);
-        } else {
-          console.log("Anmeldedaten fehlerhaft (Passwort)");
-        }
+      if (props.isRegistered) {
+        await fetch(process.env.API_URL + `/mitarbeiter/${user.id}`, {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          method: "POST",
+          body: JSON.stringify({ passwort: input.passwort }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data) {
+              console.log("Anmeldedaten korrekt");
+              setValid(true);
+              props.login(true);
+            } else {
+              console.log("Anmeldedaten fehlerhaft");
+              setValid(false);
+              setHelperTextPwd("Falsche Anmeldedaten");
+            }
+          });
+      } else {
+        props.setRegistered(true);
+        setBtnTxt("Anmelden");
       }
-    } else if (validateEmail(input.email) && validatePassword(input.passwort)) {
+    } else if (validateEmail(input.email)) {
       console.log("User existiert nicht");
-      // prettier-ignore
-      await fetch(process.env.API_URL + "/mitarbeiter", {
-        method: "POST",
-        headers: {
-          "Accept": "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          vorname: "",
-          nachname: "",
-          email: input.email,
-          passwort: input.passwort,
-        }),
-      })
-        .then((response) => response.text())
-        .then((data) => console.log(data));
-      // props.login(true);
-      console.log("User added");
+      setRdyToRegister(true);
+      setValid(false);
+      setHelperTextEmail("Kein Account mit dieser E-Mail");
+      setBtnTxt("Registrieren");
+      // }
+      //   // create new Mitarbeiter
+      //   // ? Registrierung einbauen?
+      //   // prettier-ignore
+      //   await fetch(process.env.API_URL + "/mitarbeiter", { //? path als env variable
+      //     method: "POST",
+      //     headers: {
+      //       "Accept": "application/json",
+      //       "Content-Type": "application/json",
+      //     },
+      //     body: JSON.stringify({
+      //       vorname: "",
+      //       nachname: "",
+      //       email: input.email,
+      //       passwort: input.passwort,
+      //     }),
+      //   })
+      //     .then((response) => response.text())
+      //     .then((data) => console.log(data));
+      //   // props.login(true);
+      //   console.log("User added");
     } else {
       console.log("Email or Password Validation went wrong");
+      setValid(false);
+      setHelperTextEmail("ungültige E-Mail");
     }
   };
 
@@ -136,6 +181,9 @@ export default function SignIn(props) {
             sx={{ mt: 1 }}
           >
             <TextField
+              error={!isValid}
+              helperText={helperTextEmail}
+              type="text"
               margin="normal"
               value={input.email}
               onChange={handleChange}
@@ -144,47 +192,50 @@ export default function SignIn(props) {
               id="email"
               label="E-Mail"
               name="email"
-              autoComplete="email"
+              autoComplete="email username"
               autoFocus
             />
-
-            <TextField
-              margin="normal"
-              value={input.password}
-              onChange={handleChange}
-              required
-              fullWidth
-              name="passwort"
-              label="Passwort"
-              type="password"
-              id="passwort"
-              autoComplete="current-password"
-            />
+            {/* anders lösen? */}
+            {props.isRegistered && (
+              <TextField
+                error={!isValid}
+                helperText={helperTextPwd}
+                hidden
+                margin="normal"
+                value={input.password}
+                onChange={handleChange}
+                required
+                fullWidth
+                name="passwort"
+                label="Passwort"
+                type="password"
+                id="passwort"
+                autoComplete="current-password"
+              />
+            )}
 
             {/* <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
             /> */}
+            {rdyToRegister && (
+              <Button
+                variant="outlined"
+                fullWidth
+                sx={{ mt: 3 }}
+                onClick={handleClick}
+              >
+                Zurück
+              </Button>
+            )}
             <Button
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+              sx={{ mt: 3, mb: 2, minWidth: 180 }}
             >
-              Anmelden
+              {btnTxt}
             </Button>
-            {/* <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link href="#" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
-              </Grid>
-            </Grid> */}
           </Box>
         </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />
