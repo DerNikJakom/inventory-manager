@@ -10,7 +10,7 @@ const pool = new pg.Pool({
   port: 5432,
 });
 
-const saltRounds = 10;
+const saltRounds = 12;
 
 //console.log(process.env);
 
@@ -93,45 +93,102 @@ const getGeraeteOfUser = (id) => {
   });
 };
 
-// TODO Hashind and salting
+// TODO Hashing and salting
 const createMitarbeiter = (body) => {
   return new Promise(function (resolve, reject) {
     const { vorname, nachname, email, passwort } = body;
     console.log(body);
 
-    // TODO move this into the query to store the salt and hashed password
-    bcrypt.genSalt(saltRounds, (err, salt) => {
-      console.log(salt);
-      bcrypt.hash(passwort, salt, (err, hash) => {
-        console.log(hash);
-      });
-    });
+    if (Object.keys(body).length > 0) {
+      // TODO move this into the query to store the salt and hashed password
+      bcrypt.genSalt(saltRounds, (err, salt) => {
+        console.log(salt);
+        pool.query(
+          "INSERT INTO mitarbeiter (email, passwort, salt) VALUES ($1, $2, $3)",
+          [email, "temp", salt],
+          (error, result) => {
+            if (error) {
+              reject(error);
+            }
+          }
+        );
 
-    if (Object.keys(body).length > 110) {
-      pool.query(
-        "INSERT INTO mitarbeiter (vorname, nachname, email, passwort, salt) VALUES ($1, $2, $3, $4, $5) RETURNING *",
-        [vorname, nachname, email, passwort, salt],
-        (error, results) => {
-          if (error) {
-            reject(error);
-          }
-          if (results && results.rows) {
-            resolve(
-              `Backend: A new mitarbeiter has been added: ${JSON.stringify(
-                results.rows[0]
-              )}`
-            );
-          } else {
-            reject(new Error("No results found"));
-          }
-        }
-      );
+        bcrypt.hash(passwort, salt, (err, hash) => {
+          console.log(hash);
+          pool.query(
+            "UPDATE mitarbeiter SET passwort = $1 WHERE email = $2",
+            [hash, email],
+            (error, result) => {
+              if (error) {
+                reject(error);
+              }
+              if (result && result.rows) {
+                resolve(
+                  `Backend: A new mitarbeiter has been added: ${JSON.stringify(
+                    result.rows[0]
+                  )}`
+                );
+              } else {
+                reject(new Error("No results found"));
+              }
+            }
+          );
+        });
+      });
     } else {
       console.error("No or wrong input given");
     }
+
+    // if (Object.keys(body).length > 0) {
+    //   pool.query(
+    //     "INSERT INTO mitarbeiter (vorname, nachname, email, passwort, salt) VALUES ($1, $2, $3, $4, $5) RETURNING *",
+    //     [vorname, nachname, email, passwort, salt],
+    //     (error, results) => {
+    //       if (error) {
+    //         reject(error);
+    //       }
+    //       if (results && results.rows) {
+    //         resolve(
+    //           `Backend: A new mitarbeiter has been added: ${JSON.stringify(
+    //             results.rows[0]
+    //           )}`
+    //         );
+    //       } else {
+    //         reject(new Error("No results found"));
+    //       }
+    //     }
+    //   );
+    // } else {
+    //   console.error("No or wrong input given");
+    // }
   });
 };
-//delete a mitarbeiter
+
+// check credentials of user
+const checkMitarbeiter = (id, pwd) => {
+  return new Promise(function (resolve, reject) {
+    pool.query(
+      "SELECT id, email, passwort, salt FROM mitarbeiter WHERE id = $1",
+      [id],
+      (error, results) => {
+        if (error) {
+          reject(error);
+        }
+        if (results && results.rows) {
+          const hash = results.rows[0].passwort;
+          const plaintextPassword = pwd.passwort;
+          bcrypt.compare(plaintextPassword, hash, function (err, result) {
+            result ? resolve(true) : resolve(false);
+          });
+        } else {
+          reject(new Error("No results found"));
+        }
+      }
+    );
+  });
+};
+
+// delete a mitarbeiter
 const deleteMitarbeiter = (id) => {
   return new Promise(function (resolve, reject) {
     pool.query(
@@ -209,4 +266,5 @@ export default {
   getSpecificGeraet,
   updateGeraet,
   createMitarbeiter,
+  checkMitarbeiter,
 };

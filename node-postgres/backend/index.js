@@ -84,6 +84,17 @@ app.post("/mitarbeiter", (req, res) => {
     });
 });
 
+app.post("/mitarbeiter/:id", (req, res) => {
+  deviceDB
+    .checkMitarbeiter(req.params.id, req.body)
+    .then((response) => {
+      res.status(200).send(response);
+    })
+    .catch((error) => {
+      res.status(500).send(error);
+    });
+});
+
 app.delete("/mitarbeiter/:id", (req, res) => {
   deviceDB
     .deleteMitarbeiter(req.params.id)
