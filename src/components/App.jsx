@@ -5,14 +5,8 @@ import "../styles/App.css";
 
 function App() {
   const [isRegistered, setRegistered] = useState(false);
-  const [isLoggedIn, setLoggedIn] = useState(false); // ! Status
+  const [isLoggedIn, setLoggedIn] = useState(false); // ! Status richtig setzen, evtl auslagern
   const [currentUserID, setCurrentUserID] = useState(0);
-
-  const addUser = (user) => {
-    setUser((prevValue) => {
-      return [...prevValue, user];
-    });
-  };
 
   function logOut() {
     setLoggedIn(false);
@@ -29,8 +23,8 @@ function App() {
       <>
         <SignIn
           login={setLoggedIn}
-          register={setRegistered}
-          addUser={addUser}
+          isRegistered={isRegistered}
+          setRegistered={setRegistered}
           userID={setCurrentUserID}
         />
       </>
