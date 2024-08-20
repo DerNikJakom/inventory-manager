@@ -62,7 +62,6 @@ export default function DeviceInformation(props) {
     clickedBtn === "assignBtn" ? setAssigned(true) : setAssigned(false);
   };
 
-  //TODO: change path to have the current user id
   const changeAssignedUser = async (button) => {
     if (button === "assignBtn") {
       await fetch(
@@ -210,7 +209,7 @@ export default function DeviceInformation(props) {
         <Card sx={{ borderRadius: 3, backgroundColor: "#F2F7F8", width: 600 }}>
           <CardHeader
             title="Gerätecode eingeben"
-            subheader="6-stelliger Hex-Code"
+            subheader="6-stelliger Inventarcode"
           />
           <CardContent onSubmit={handleSubmit}>
             <Box
