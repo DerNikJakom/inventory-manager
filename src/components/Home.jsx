@@ -9,6 +9,19 @@ import Confirm from "./Confirm";
 
 export default function Home(props) {
   const [request, setRequest] = useState("");
+  const [name, setName] = useState("");
+
+  const getMitarbeiter = async () => {
+    const result = await fetch(process.env.API_URL)
+      .then((response) => response.json())
+      .then((data) => {
+        return data;
+      });
+    const userJSON = result.find((i) => i.id === props.userID);
+    setName(userJSON.vorname);
+  };
+
+  getMitarbeiter();
 
   switch (request) {
     case "deviceInfoBtn":
@@ -21,7 +34,6 @@ export default function Home(props) {
       return (
         <Confirm goBack={setRequest} logOut={props.logOut} type="logOut" />
       );
-
     default:
       return (
         <Card
@@ -29,9 +41,9 @@ export default function Home(props) {
         >
           <CardContent>
             <h1 style={{ marginTop: 10, marginLeft: 60, marginRight: 60 }}>
-              ASKUMA Manager
+              Hallo {name}!
             </h1>
-            <h2>Was möchten Sie tun?</h2>
+            <h2>Was möchtest Du tun?</h2>
 
             <CardActions sx={{ justifyContent: "center" }}>
               <MenuButtons userInput={setRequest} />
