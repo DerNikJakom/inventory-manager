@@ -69,16 +69,16 @@ export default function DeviceInformation(props) {
         {
           method: "PUT",
         }
-      )
-        .then((response) => response.text())
-        .then((data) => console.log(data));
+      );
+      // .then((response) => response.text())
+      // .then((data) => console.log(data));
       await getResponse(`/geraete/${device.code}`);
     } else {
       await fetch(process.env.API_URL + `/geraete/${device.code}/0`, {
         method: "PUT",
-      })
-        .then((response) => response.text())
-        .then((data) => console.log(data));
+      });
+      // .then((response) => response.text())
+      // .then((data) => console.log(data));
       await getResponse(`/geraete/${device.code}`);
     }
   };
@@ -223,9 +223,7 @@ export default function DeviceInformation(props) {
               <TextField
                 error={!isHexCode(input) && input.length > 1 && true}
                 helperText={
-                  !isHexCode(input) &&
-                  input.length > 1 &&
-                  "Not a valid Hex-Code"
+                  !isHexCode(input) && input.length > 1 && "kein gültiger Code"
                 }
                 required
                 autoFocus
@@ -233,7 +231,7 @@ export default function DeviceInformation(props) {
                 value={input}
                 color="askumaRed"
                 id="hex-input"
-                label="Hex-Code"
+                label="Inventarcode"
               />
             </Box>
           </CardContent>
