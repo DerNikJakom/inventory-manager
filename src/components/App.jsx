@@ -25,7 +25,7 @@ function App() {
           login={setLoggedIn}
           isRegistered={isRegistered}
           setRegistered={setRegistered}
-          userID={setCurrentUserID}
+          setUserID={setCurrentUserID}
         />
       </>
     );
