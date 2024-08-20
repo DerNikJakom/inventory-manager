@@ -11,6 +11,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+import SignUp from "./SignUp";
 
 function Copyright(props) {
   return (
@@ -59,6 +60,14 @@ export default function SignIn(props) {
     );
   };
 
+  const allNew = () => {
+    props.setRegistered(false);
+    setValid(true);
+    setHelperTextEmail("");
+    setHelperTextPwd("");
+    setBtnTxt("Weiter");
+  };
+
   const handleClick = () => {
     setHelperTextEmail("");
     setValid(true);
@@ -69,10 +78,7 @@ export default function SignIn(props) {
   const handleChange = (event) => {
     const { name, value } = event.target;
     if (name === "email" && !validateEmail(value)) {
-      props.setRegistered(false);
-      setValid(true);
-      setHelperTextEmail("");
-      setBtnTxt("Weiter");
+      allNew();
     } else if (name === "passwort" && value === "") {
       setHelperTextPwd("");
       setValid(true);
@@ -96,8 +102,8 @@ export default function SignIn(props) {
 
     const userIndex = result.findIndex((i) => i.email === input.email);
     const user = result[userIndex];
+    props.setUserID(user.id);
 
-    // TODO --------------------------------------
     if (userIndex >= 0) {
       if (props.isRegistered) {
         await fetch(process.env.API_URL + `/mitarbeiter/${user.id}`, {
@@ -111,13 +117,12 @@ export default function SignIn(props) {
           .then((response) => response.json())
           .then((data) => {
             if (data) {
-              console.log("Anmeldedaten korrekt");
               setValid(true);
               props.login(true);
             } else {
-              console.log("Anmeldedaten fehlerhaft");
               setValid(false);
               setHelperTextPwd("Falsche Anmeldedaten");
+              event.target["passwort"].select();
             }
           });
       } else {
@@ -126,10 +131,15 @@ export default function SignIn(props) {
       }
     } else if (validateEmail(input.email)) {
       console.log("User existiert nicht");
-      setRdyToRegister(true);
-      setValid(false);
-      setHelperTextEmail("Kein Account mit dieser E-Mail");
-      setBtnTxt("Registrieren");
+      console.log(btnTxt);
+      if (btnTxt === "Registrieren") {
+        console.log("Registrieren");
+      } else {
+        setRdyToRegister(true);
+        setValid(false);
+        setHelperTextEmail("Kein Account mit dieser E-Mail");
+        setBtnTxt("Registrieren");
+      }
       // }
       //   // create new Mitarbeiter
       //   // ? Registrierung einbauen?
@@ -200,7 +210,7 @@ export default function SignIn(props) {
               <TextField
                 error={!isValid}
                 helperText={helperTextPwd}
-                hidden
+                autoFocus
                 margin="normal"
                 value={input.password}
                 onChange={handleChange}
