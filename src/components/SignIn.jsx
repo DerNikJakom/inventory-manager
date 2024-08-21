@@ -101,10 +101,11 @@ export default function SignIn(props) {
       });
 
     const userIndex = result.findIndex((i) => i.email === input.email);
-    const user = result[userIndex];
-    props.setUserID(user.id);
 
     if (userIndex >= 0) {
+      const user = result[userIndex];
+      props.setUserID(user.id);
+
       if (props.isRegistered) {
         await fetch(process.env.API_URL + `/mitarbeiter/${user.id}`, {
           headers: {
@@ -118,6 +119,7 @@ export default function SignIn(props) {
           .then((data) => {
             if (data) {
               setValid(true);
+              allNew();
               props.login(true);
             } else {
               setValid(false);
@@ -162,9 +164,9 @@ export default function SignIn(props) {
       //   // props.login(true);
       //   console.log("User added");
     } else {
-      console.log("Email or Password Validation went wrong");
       setValid(false);
       setHelperTextEmail("ungültige E-Mail");
+      event.target["email"].select();
     }
   };
 
