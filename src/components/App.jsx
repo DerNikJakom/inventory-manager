@@ -3,7 +3,7 @@ import SignIn from "./SignIn";
 import Home from "./Home";
 import "../styles/App.css";
 
-function App() {
+export default function App() {
   const [isRegistered, setRegistered] = useState(false);
   const [isLoggedIn, setLoggedIn] = useState(false); // ! Status richtig setzen, evtl auslagern
   const [currentUserID, setCurrentUserID] = useState(0);
@@ -31,5 +31,3 @@ function App() {
     );
   }
 }
-
-export default App;
