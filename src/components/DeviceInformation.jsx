@@ -50,6 +50,11 @@ export default function DeviceInformation(props) {
     produktnummer: "",
     seriennummer: "",
     code: "",
+    geraetetyp: "",
+    anschaffungsdatum: "",
+    anschaffungskosten: "",
+    standort: "",
+    bemerkungen: "",
   });
 
   const handleExpandClick = () => {
@@ -148,14 +153,17 @@ export default function DeviceInformation(props) {
                   Zurück
                 </Button>
                 <div style={{ width: "0.5em" }}></div>
-                <Button
-                  id="removeBtn"
-                  onClick={handleClick}
-                  color="askumaRed"
-                  variant="outlined"
-                >
-                  Entfernen
-                </Button>
+                {/* TODO --------------------------------------------- */}
+                {props.userID == device.mitarbeiterID && (
+                  <Button
+                    id="removeBtn"
+                    onClick={handleClick}
+                    color="askumaRed"
+                    variant="outlined"
+                  >
+                    Entfernen
+                  </Button>
+                )}
               </>
             ) : (
               <>
@@ -193,9 +201,37 @@ export default function DeviceInformation(props) {
             <CardContent>
               <Typography sx={{ textAlign: "left" }} variant="body3">
                 <ul>
-                  <li>Gerätebezeichnung: {device.name}</li>
-                  <li>Produktnummer: {device.produktnummer}</li>
-                  <li>Seriennummer: {device.seriennummer}</li>
+                  <li>
+                    <b>Typ:</b> {device.geraetetyp}
+                  </li>
+                  <li>
+                    <b>Standort:</b>{" "}
+                    {device.standort == null
+                      ? "nicht zugewiesen"
+                      : device.standort}
+                  </li>
+                  <li>
+                    <b>Bemerkungen:</b>{" "}
+                    {device.bemerkungen == null
+                      ? "keine Bemerkungen"
+                      : device.bemerkungen}
+                  </li>
+                  <br />
+                  <li>
+                    <b>Gerätebezeichnung:</b> {device.name}
+                  </li>
+                  <li>
+                    <b>Produktnummer:</b> {device.produktnummer}
+                  </li>
+                  <li>
+                    <b>Seriennummer:</b> {device.seriennummer}
+                  </li>
+                  <li>
+                    <b>Anschaffungsdatum:</b> {device.anschaffungsdatum}
+                  </li>
+                  <li>
+                    <b>Preis:</b> {device.anschaffungskosten}€
+                  </li>
                 </ul>
               </Typography>
             </CardContent>
