@@ -58,7 +58,7 @@ const getAllGeraete = async () => {
 const getSpecificGeraet = (code) => {
   return new Promise(function (resolve, reject) {
     pool.query(
-      "SELECT geraete.mitarbeiter_id, mitarbeiter.vorname, mitarbeiter.nachname, geraete.name, geraete.hersteller, geraete.modell, geraete.seriennummer, geraete.produktnummer, geraete.code FROM geraete INNER JOIN mitarbeiter ON geraete.mitarbeiter_id = mitarbeiter.id WHERE code = $1",
+      "SELECT geraete.mitarbeiter_id, mitarbeiter.vorname, mitarbeiter.nachname, geraete.name, geraete.hersteller, geraete.modell, geraete.seriennummer, geraete.produktnummer, geraete.code, geraete.geraetetyp, geraete.anschaffungsdatum, geraete.anschaffungskosten, geraete.standort, geraete.bemerkungen FROM geraete INNER JOIN mitarbeiter ON geraete.mitarbeiter_id = mitarbeiter.id WHERE code = $1",
       [code],
       (error, results) => {
         if (error) {
