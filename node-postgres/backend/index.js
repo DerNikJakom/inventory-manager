@@ -2,12 +2,12 @@ import express from "express";
 import deviceDB from "./deviceDB.js";
 
 const app = express();
-const port = 3001;
+const port = 3000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(function (req, res, next) {
-  res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+  res.setHeader("Access-Control-Allow-Origin", "*"); //"http://localhost:5173");
   res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
   res.setHeader(
     "Access-Control-Allow-Headers",
@@ -17,15 +17,19 @@ app.use(function (req, res, next) {
 });
 
 app.get("/", (req, res) => {
-  deviceDB
-    .getMitarbeiter()
-    .then((response) => {
-      res.status(200).send(response);
-    })
-    .catch((error) => {
-      res.status(500).send(error);
-    });
+  res.send("Hello World!");
 });
+
+// app.get("/", (req, res) => {
+//   deviceDB
+//     .getMitarbeiter()
+//     .then((response) => {
+//       res.status(200).send(response);
+//     })
+//     .catch((error) => {
+//       res.status(500).send(error);
+//     });
+// });
 
 app.get("/geraete", (req, res) => {
   deviceDB

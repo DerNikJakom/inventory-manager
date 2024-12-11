@@ -1,18 +1,15 @@
 import pg from "pg";
 import bcrypt from "bcrypt";
 
-// TODO Replace with env variables
 const pool = new pg.Pool({
-  user: "postgres",
-  host: "localhost",
-  database: "device-manager",
-  password: "postgres",
-  port: 5432,
+  user: process.env.DB_USER,
+  host: process.env.DB_HOST,
+  database: process.env.DB_DATABASE,
+  password: process.env.DB_PASSWORD,
+  port: process.env.DB_PORT,
 });
 
 const saltRounds = 12;
-
-//console.log(process.env);
 
 //get all mitarbeiter
 const getMitarbeiter = async () => {
