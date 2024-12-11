@@ -19,20 +19,20 @@ app.use(function (req, res, next) {
   next();
 });
 
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
-
 // app.get("/", (req, res) => {
-//   deviceDB
-//     .getMitarbeiter()
-//     .then((response) => {
-//       res.status(200).send(response);
-//     })
-//     .catch((error) => {
-//       res.status(500).send(error);
-//     });
+//   res.send("Hello World!");
 // });
+
+app.get("/", (req, res) => {
+  deviceDB
+    .getMitarbeiter()
+    .then((response) => {
+      res.status(200).send(response);
+    })
+    .catch((error) => {
+      res.status(500).send(error);
+    });
+});
 
 app.get("/geraete", (req, res) => {
   deviceDB
