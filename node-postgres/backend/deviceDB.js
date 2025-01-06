@@ -10,6 +10,9 @@ const pool = new pg.Pool({
   database: process.env.DB_DATABASE,
   password: process.env.DB_PASSWORD,
   port: process.env.DB_PORT,
+  ssl: {
+    rejectUnauthorized: false,
+  },
 });
 
 const saltRounds = 12;
@@ -18,17 +21,17 @@ const saltRounds = 12;
 const testConnection = async () => {
   try {
     return await new Promise(function (resolve, reject) {
-      resolve("Connection successful");
-      // pool.query("SELECT NOW()", (error, results) => {
-      //   if (error) {
-      //     reject(error);
-      //   }
-      //   if (results && results.rows) {
-      //     resolve(results.rows);
-      //   } else {
-      //     reject(new Error("No results found"));
-      //   }
-      // });
+      // resolve("Connection successful");
+      pool.query("SELECT NOW()", (error, results) => {
+        if (error) {
+          reject(error);
+        }
+        if (results && results.rows) {
+          resolve(results.rows);
+        } else {
+          reject(new Error("No results found"));
+        }
+      });
     });
   } catch (error_1) {
     console.error(error_1);
