@@ -21,6 +21,11 @@ const saltRounds = 12;
 const testConnection = async () => {
   try {
     return await new Promise(function (resolve, reject) {
+      console.log(process.env.DB_USER);
+      console.log(process.env.DB_HOST);
+      console.log(process.env.DB_DATABASE);
+      console.log(process.env.DB_PASSWORD);
+      console.log(process.env.DB_PORT);
       resolve("Connection successful");
       pool.query("SELECT NOW()", (error, results) => {
         if (error) {
