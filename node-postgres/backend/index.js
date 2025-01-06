@@ -20,8 +20,15 @@ app.use(function (req, res, next) {
 });
 
 app.get("/", (req, res) => {
-  deviceDB.testConnection();
-  res.send("Hello World!");
+  deviceDB
+    .testConnection()
+    .then((response) => {
+      res.status(200).send(response);
+    })
+    .catch((error) => {
+      res.status(500).send(error);
+    });
+  // res.send("Hello World!");
 });
 
 app.get("/mitarbeiter", (req, res) => {
