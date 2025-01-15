@@ -21,20 +21,23 @@ const saltRounds = 12;
 const testConnection = async () => {
   try {
     return await new Promise(function (resolve, reject) {
-      // resolve("Connection successful");
+      console.log("Attempting to connect to the database...");
       pool.query("SELECT NOW()", (error, results) => {
         if (error) {
+          console.error("Database connection error:", error);
           reject(error);
         }
         if (results && results.rows) {
+          console.log("Database connection successful:", results.rows);
           resolve(results.rows);
         } else {
+          console.error("No results found");
           reject(new Error("No results found"));
         }
       });
     });
   } catch (error_1) {
-    console.error(error_1);
+    console.error("Internal server error:", error_1);
     throw new Error("Internal server error");
   }
 };
