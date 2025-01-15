@@ -15,25 +15,13 @@ const pool = new pg.Pool({
   },
 });
 
-// Test environment variables
-const testEnvVariables = () => {
-  console.log("DB_USER:", process.env.DB_USER);
-  console.log("DB_HOST:", process.env.DB_HOST);
-  console.log("DB_DATABASE:", process.env.DB_DATABASE);
-  console.log("DB_PASSWORD:", process.env.DB_PASSWORD);
-  console.log("DB_PORT:", process.env.DB_PORT);
-};
-
-// Call the test function
-testEnvVariables();
-
 const saltRounds = 12;
 
 // Test connection
 const testConnection = async () => {
   try {
     return await new Promise(function (resolve, reject) {
-      resolve("Connection successful");
+      // resolve("Connection successful");
       pool.query("SELECT NOW()", (error, results) => {
         if (error) {
           reject(error);
