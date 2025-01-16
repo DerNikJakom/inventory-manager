@@ -94,7 +94,7 @@ export default function SignIn(props) {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const result = await fetch(process.env.API_URL)
+    const result = await fetch(process.env.API_URL + "/mitarbeiter")
       .then((response) => response.json())
       .then((data) => {
         return data;
