@@ -5,29 +5,26 @@ import "../styles/App.css";
 
 export default function App() {
   const [isRegistered, setRegistered] = useState(false);
-  const [isLoggedIn, setLoggedIn] = useState(false); // ! Status richtig setzen, evtl auslagern
-  const [currentUserID, setCurrentUserID] = useState(0);
+  const [isLoggedIn, setLoggedIn] = useState(false);
+  const [currentUserID, setCurrentUserID] = useState(null);
 
   function logOut() {
     setLoggedIn(false);
+    setCurrentUserID(null);
   }
 
-  if (isLoggedIn) {
-    return (
-      <>
+  return (
+    <>
+      {isLoggedIn ? (
         <Home logOut={logOut} userID={currentUserID} />
-      </>
-    );
-  } else {
-    return (
-      <>
+      ) : (
         <SignIn
           login={setLoggedIn}
           isRegistered={isRegistered}
           setRegistered={setRegistered}
           setUserID={setCurrentUserID}
         />
-      </>
-    );
-  }
+      )}
+    </>
+  );
 }
