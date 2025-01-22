@@ -91,9 +91,13 @@ export default function DeviceInformation(props) {
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (isHexCode(input)) {
-      const result = await getResponse(`/geraete/${input.toUpperCase()}`); //TODO: siehe 'getResponse'
-      if (result.length === 1) {
-        setCodeGiven(true);
+      try {
+        const device = await getResponse(`/geraete/${input.toUpperCase()}`); // Hole das Gerät mit await
+        if (device) {
+          setCodeGiven(true); // Erfolgreiche Antwort bedeutet, der Code wurde gefunden
+        }
+      } catch (error) {
+        console.error("Fehler beim Abrufen des Geräts:", error);
       }
     } else {
       console.error("Not a valid Hex-Code");
@@ -101,19 +105,32 @@ export default function DeviceInformation(props) {
   };
 
   const getResponse = async (path) => {
-    let result; // TODO: Redundant durch setState 'device'
-    await fetch(process.env.API_URL + path)
-      .then((response) => response.json())
-      .then((json) => {
-        result = json; // TODO: siehe oben
-        setDevice(json[0]);
-        if (json[0].vorname == null) {
-          setAssigned(false);
-        } else {
-          setAssigned(true);
-        }
-      });
-    return result; // TODO: siehe oben
+    try {
+      const response = await fetch(process.env.API_URL + path);
+
+      // Sicherstellen, dass die Antwort erfolgreich war
+      if (!response.ok) {
+        throw new Error("Netzwerkantwort war nicht okay");
+      }
+
+      const json = await response.json();
+
+      // Prüfen, ob die Antwort ein Gerät enthält
+      if (json.length > 0) {
+        const device = json[0]; // Wir nehmen an, dass das erste Element das Gerät ist
+        setDevice(device);
+
+        // Setze den Status für die Zuweisung des Geräts
+        setAssigned(device.vorname != null);
+
+        return device; // Rückgabe des Geräts
+      } else {
+        throw new Error("Kein Gerät gefunden");
+      }
+    } catch (error) {
+      console.error("Fehler beim Abrufen der Daten:", error);
+      return null; // Wenn ein Fehler auftritt, return null
+    }
   };
 
   const handleChange = (event) => {
@@ -257,9 +274,9 @@ export default function DeviceInformation(props) {
               autoComplete="off"
             >
               <TextField
-                error={!isHexCode(input) && input.length > 1 && true}
+                error={!isHexCode(input) && input.length > 0}
                 helperText={
-                  !isHexCode(input) && input.length > 1 && "kein gültiger Code"
+                  !isHexCode(input) && input.length > 0 && "kein gültiger Code"
                 }
                 required
                 autoFocus
