@@ -121,7 +121,6 @@ const getGeraeteOfUser = (id) => {
   });
 };
 
-// TODO Hashing and salting
 const createMitarbeiter = (body) => {
   return new Promise(function (resolve, reject) {
     const { vorname, nachname, email, passwort } = body;
@@ -166,29 +165,6 @@ const createMitarbeiter = (body) => {
     } else {
       console.error("No or wrong input given");
     }
-
-    // if (Object.keys(body).length > 0) {
-    //   pool.query(
-    //     "INSERT INTO mitarbeiter (vorname, nachname, email, passwort, salt) VALUES ($1, $2, $3, $4, $5) RETURNING *",
-    //     [vorname, nachname, email, passwort, salt],
-    //     (error, results) => {
-    //       if (error) {
-    //         reject(error);
-    //       }
-    //       if (results && results.rows) {
-    //         resolve(
-    //           `Backend: A new mitarbeiter has been added: ${JSON.stringify(
-    //             results.rows[0]
-    //           )}`
-    //         );
-    //       } else {
-    //         reject(new Error("No results found"));
-    //       }
-    //     }
-    //   );
-    // } else {
-    //   console.error("No or wrong input given");
-    // }
   });
 };
 
