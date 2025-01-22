@@ -153,8 +153,7 @@ export default function DeviceInformation(props) {
                   Zurück
                 </Button>
                 <div style={{ width: "0.5em" }}></div>
-                {/* TODO --------------------------------------------- */}
-                {props.userID == device.mitarbeiterID && (
+                {props.userID == device.mitarbeiter_id && (
                   <Button
                     id="removeBtn"
                     onClick={handleClick}
@@ -166,6 +165,7 @@ export default function DeviceInformation(props) {
                 )}
               </>
             ) : (
+              // ELSE
               <>
                 <Button
                   variant="outlined"
