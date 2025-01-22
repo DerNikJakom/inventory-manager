@@ -130,10 +130,10 @@ const createMitarbeiter = (body) => {
     if (Object.keys(body).length > 0) {
       // TODO move this into the query to store the salt and hashed password
       bcrypt.genSalt(saltRounds, (err, salt) => {
-        console.log(salt);
+        console.log("Salt: ", salt);
         pool.query(
-          "INSERT INTO mitarbeiter (email, passwort, salt) VALUES ($1, $2, $3)",
-          [email, "temp", salt],
+          "INSERT INTO mitarbeiter (vorname, nachname, email, passwort, salt) VALUES ($1, $2, $3, $4, $5)",
+          [vorname, nachname, email, "temp", salt],
           (error, result) => {
             if (error) {
               reject(error);
@@ -142,7 +142,7 @@ const createMitarbeiter = (body) => {
         );
 
         bcrypt.hash(passwort, salt, (err, hash) => {
-          console.log(hash);
+          console.log("Hash: ", hash);
           pool.query(
             "UPDATE mitarbeiter SET passwort = $1 WHERE email = $2",
             [hash, email],
